@@ -1,0 +1,32 @@
+name: Build IsotorOS
+
+on: 
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Update package feeds
+      run: |
+        cd istoreos
+        ./scripts/feeds update -a
+        ./scripts/feeds install -a
+
+    - name: Build OpenWrt
+      run: |
+        cd istoreos
+        make menuconfig
+        make -j$(nproc) V=s
+
+    - name: Upload firmware artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: firmware
+        path: openwrt/bin/targets/
