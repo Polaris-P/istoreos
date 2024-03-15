@@ -13,13 +13,13 @@ jobs:
 
     - name: Update package feeds
       run: |
-        cd istoreos
+        cd ./istoreos
         ./scripts/feeds update -a
         ./scripts/feeds install -a
 
-    - name: Build OpenWrt
+    - name: Build IstoreOS
       run: |
-        cd istoreos
+        cd ./istoreos
         make menuconfig
         make -j$(nproc) V=s
 
@@ -27,4 +27,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: firmware
-        path: openwrt/bin/targets/
+        path: istoreos/bin/targets/
