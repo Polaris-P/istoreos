@@ -1,44 +1,32 @@
-name: Build IsotorOS
+name: Batch Git Clone and Upload
 
-on: 
+on:
   workflow_dispatch:
 
 jobs:
-  build:
+  batch_clone_and_upload:
     runs-on: ubuntu-latest
+
     steps:
-    - name: Checkout code
+    - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: 环境准备
+    - name: Set up Git
       run: |
-          #sudo rm -rf /usr/share/dotnet /etc/mysql /etc/apt/sources.list.d /usr/local/lib/android /opt/ghc
-          #sudo -E apt-get -y purge ghc* zulu* hhvm llvm* firefox google* dotnet* powershell openjdk* php* android*
-          sudo -E apt-get update
-          sudo -E apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3 zip unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs gcc-multilib g++-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler antlr3 gperf swig libtinfo5
-          sudo -E apt-get -y autoremove --purge
-          sudo -E apt-get clean
-          df -h
-      
-      
-    - name: Update package feeds
-      run: |
-        
-        ./scripts/feeds update -a
-        ./scripts/feeds install -a
-    - name: Make download
-      run: |
-        make download -j8 || make download -j1 V=s
-        rm -rf $(find ./dl/ -size -1024c)
-        df -h
-    - name: Build IstoreOS
-      run: |
-        
-        make menuconfig
-        make -j$(nproc) V=s
+        git config --global user.email "pengguo2022@163.com"
+        git config --global user.name "Polaris-P"
 
-    - name: Upload firmware artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: firmware
-        path: istoreos/bin/targets/
+    - name: Clone repositories
+      run: |
+        REPO_URLS="https://git.openwrt.org/buildbot.git  https://git.openwrt.org/feed/packages.git  https://git.openwrt.org/feed/routing.git  https://git.openwrt.org/feed/telephony.git  https://git.openwrt.org/feed/video.git  https://git.openwrt.org/keyring.git  https://git.openwrt.org/maintainer-tools.git  https://git.openwrt.org/openwrt/openwrt.git  https://git.openwrt.org/openwrt/staging/981213.git  https://git.openwrt.org/openwrt/staging/adrian.git  https://git.openwrt.org/openwrt/staging/ansuel.git  https://git.openwrt.org/openwrt/staging/aparcar.git  https://git.openwrt.org/openwrt/staging/blocktrron.git  https://git.openwrt.org/openwrt/staging/blogic.git  https://git.openwrt.org/openwrt/staging/chunkeey.git  https://git.openwrt.org/openwrt/staging/dangole.git  https://git.openwrt.org/openwrt/staging/dedeckeh.git  https://git.openwrt.org/openwrt/staging/florian.git  https://git.openwrt.org/openwrt/staging/hauke.git  https://git.openwrt.org/openwrt/staging/jogo.git  https://git.openwrt.org/openwrt/staging/jow.git  https://git.openwrt.org/openwrt/staging/kaloz.git  https://git.openwrt.org/openwrt/staging/ldir.git  https://git.openwrt.org/openwrt/staging/luka.git  https://git.openwrt.org/openwrt/staging/lynxis.git  https://git.openwrt.org/openwrt/staging/lynxis/omap.git  https://git.openwrt.org/openwrt/staging/mans0n.git  https://git.openwrt.org/openwrt/staging/mkresin.git  https://git.openwrt.org/openwrt/staging/nbd.git  https://git.openwrt.org/openwrt/staging/neocturne.git  https://git.openwrt.org/openwrt/staging/noltari.git  https://git.openwrt.org/openwrt/staging/pepe2k.git  https://git.openwrt.org/openwrt/staging/rmilecki.git  https://git.openwrt.org/openwrt/staging/stintel.git  https://git.openwrt.org/openwrt/staging/svanheule.git  https://git.openwrt.org/openwrt/staging/thess.git  https://git.openwrt.org/openwrt/staging/wigyori.git  https://git.openwrt.org/openwrt/staging/xback.git  https://git.openwrt.org/openwrt/staging/ynezz.git  https://git.openwrt.org/openwrt/staging/yousong.git  https://git.openwrt.org/openwrt/staging/zorun.git  https://git.openwrt.org/openwrt/svn-archive/archive.git  https://git.openwrt.org/openwrt/svn-archive/docs.git  https://git.openwrt.org/openwrt/svn-archive/feeds.git  https://git.openwrt.org/openwrt/svn-archive/openwrt.git  https://git.openwrt.org/openwrt/svn-archive/packages.git  https://git.openwrt.org/project/bcm63xx/atf.git  https://git.openwrt.org/project/bcm63xx/u-boot.git  https://git.openwrt.org/project/cgi-io.git  https://git.openwrt.org/project/firewall3.git  https://git.openwrt.org/project/firewall4.git  https://git.openwrt.org/project/firmware/qca-wireless.git  https://git.openwrt.org/project/firmware-utils.git  https://git.openwrt.org/project/fstools.git  https://git.openwrt.org/project/fwtool.git"
+        CLONE_DIR="/OpenwrtPack"
+        for repo_url in $REPO_URLS; do
+          git clone $repo_url $CLONE_DIR
+        done
+
+    - name: Upload cloned data
+      run: |
+        cd $CLONE_DIR
+        git add .
+        git commit -m "Batch clone data"
+        git push origin main
