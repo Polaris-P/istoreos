@@ -23,10 +23,12 @@ jobs:
         for repo_url in $REPO_URLS; do
           git clone $repo_url $CLONE_DI
         done
+        ls
 
     - name: Upload cloned data
       run: |
         CLONE="/etc/openwrt"
+        ls
         cd $CLONE
         git add .
         git commit -m "Batch clone data"
