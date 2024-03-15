@@ -26,7 +26,8 @@ jobs:
 
     - name: Upload cloned data
       run: |
-        cd $CLONE_DIR
+        CLONE="/etc/openwrt"
+        cd $CLONE
         git add .
         git commit -m "Batch clone data"
         git remote add origin https://github.com/Polaris-P/OpenwrtPack.git
