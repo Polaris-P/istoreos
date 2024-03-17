@@ -34,6 +34,7 @@ jobs:
 
     - name: 上传回仓库
       run: |
+        git remote add MidRepo https://github.com/Polaris-P/MidRepo.git
         git add .
-        git commit -m "更新软件"
-        git push origin main
+        ggit commit -m "更新软件"
+        git push MidRepo main
