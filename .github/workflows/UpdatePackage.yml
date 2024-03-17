@@ -32,16 +32,9 @@ jobs:
         
         ./scripts/feeds update -a
         ./scripts/feeds install -a
-    - name: 查找上级文件夹
-      run: |
-        
-        cd ..
-        ls
-        mkdir -p istoreos/firmware
-        ls
-        cp -r istoreos istoreos/firmware
+
     - name: Upload firmware
       uses: actions/upload-artifact@v2
       with:
         name: firmware
-        path: firmware
+        path: ../bin
