@@ -1,0 +1,39 @@
+name: Batch Git Clone and Upload
+
+on:
+  workflow_dispatch:
+
+jobs:
+  batch_clone_and_upload:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: git信息
+      run: |
+        git config --global user.email "pengguo2022@163.com"
+        git config --global user.name "Polaris-P"
+    - name: 环境准备
+      run: |
+          #sudo rm -rf /usr/share/dotnet /etc/mysql /etc/apt/sources.list.d /usr/local/lib/android /opt/ghc
+          #sudo -E apt-get -y purge ghc* zulu* hhvm llvm* firefox google* dotnet* powershell openjdk* php* android*
+          sudo -E apt-get update
+          sudo apt-get install subversion g++ zlib1g-dev build-essential git \
+          python3 python3-distutils libncurses5-dev gawk gettext unzip \
+          file libssl-dev wget libelf-dev ecj fastjar java-propose-classpath
+          sudo -E apt-get -y autoremove --purge
+          sudo -E apt-get clean
+          df -h
+    - name: 更新软件包
+      run: |
+        
+        ./scripts/feeds update -a
+        ./scripts/feeds install -a
+
+    - name: 上传回仓库
+      run: |
+        git add .
+        git commit -m "更新软件"
+        git push origin main
