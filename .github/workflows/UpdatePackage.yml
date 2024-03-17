@@ -36,5 +36,5 @@ jobs:
       run: |
         git remote add MidRepo https://github.com/Polaris-P/MidRepo.git
         git add .
-        ggit commit -m "更新软件"
+        git commit -m "更新软件"
         git push MidRepo main
