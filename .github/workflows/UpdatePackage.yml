@@ -26,20 +26,21 @@ jobs:
           sudo -E apt-get -y autoremove --purge
           sudo -E apt-get clean
           df -h
-    - name: 查找上级文件夹
-      run: |
-        
-        cd ..
-        ls
+
     - name: 更新软件包
       run: |
         
         ./scripts/feeds update -a
         ./scripts/feeds install -a
-
-    - name: 上传回仓库
+    - name: 查找上级文件夹
       run: |
-        git remote add MidRepo https://github.com/Polaris-P/MidRepo.git
-        git add .
-        git commit -m "更新软件"
-        git push MidRepo main
+        
+        cd ..
+        ls
+        mkdir -p firmware
+        cp istoreos/ firmware/
+    - name: Upload firmware
+      uses: actions/upload-artifact@v2
+      with:
+        name: firmware
+        path: firmware
