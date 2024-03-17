@@ -37,9 +37,9 @@ jobs:
         
         cd ..
         ls
-        mkdir -p firmware
+        mkdir -p istoreos/firmware
         ls
-        cp -r istoreos firmware/
+        cp -r istoreos istoreos/firmware
     - name: Upload firmware
       uses: actions/upload-artifact@v2
       with:
